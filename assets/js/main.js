@@ -76,14 +76,40 @@
   }
 
   /* ---------------------------------------------------------
-     Фільтр галереї
+     Галерея: фільтр + «показати всі» на смартфонах
      --------------------------------------------------------- */
   var filters = $$('.filter');
   var items = $$('.gallery__item');
+  var moreBtn = $('#galleryMore');
+  var MOBILE_LIMIT = 8;
+
+  var state = { filter: 'all', expanded: false };
+  var isMobile = function () { return window.matchMedia('(max-width: 760px)').matches; };
+
+  var applyGallery = function () {
+    var shown = 0;
+    var clipped = 0;
+    var limited = isMobile() && !state.expanded;
+
+    items.forEach(function (item) {
+      var pass = state.filter === 'all' || item.dataset.cat === state.filter;
+      item.classList.toggle('is-hidden', !pass);
+      if (!pass) return;
+
+      shown++;
+      var clip = limited && shown > MOBILE_LIMIT;
+      item.classList.toggle('is-clipped', clip);
+      if (clip) clipped++;
+    });
+
+    moreBtn.hidden = clipped === 0;
+    moreBtn.textContent = 'Показати ще ' + clipped + ' фото';
+  };
 
   filters.forEach(function (btn) {
     btn.addEventListener('click', function () {
-      var cat = btn.dataset.filter;
+      state.filter = btn.dataset.filter;
+      state.expanded = false;
 
       filters.forEach(function (b) {
         var active = b === btn;
@@ -91,11 +117,17 @@
         b.setAttribute('aria-selected', String(active));
       });
 
-      items.forEach(function (item) {
-        item.classList.toggle('is-hidden', cat !== 'all' && item.dataset.cat !== cat);
-      });
+      applyGallery();
     });
   });
+
+  moreBtn.addEventListener('click', function () {
+    state.expanded = true;
+    applyGallery();
+  });
+
+  window.matchMedia('(max-width: 760px)').addEventListener('change', applyGallery);
+  applyGallery();
 
   /* ---------------------------------------------------------
      Лайтбокс
@@ -107,7 +139,9 @@
   var current = 0;
 
   var visibleItems = function () {
-    return items.filter(function (i) { return !i.classList.contains('is-hidden'); });
+    return items.filter(function (i) {
+      return !i.classList.contains('is-hidden') && !i.classList.contains('is-clipped');
+    });
   };
 
   var show = function (index) {
