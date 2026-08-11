@@ -9,6 +9,7 @@
      --------------------------------------------------------- */
   var CONFIG = {
     phone: '+380996502298',
+    phoneLabel: '099 650 2298',
 
     // Куди надсилати заявки з форми.
     // Порожньо -> форма працює через SMS-фолбек (працює завжди, без сервера).
@@ -203,6 +204,85 @@
     d.addEventListener('toggle', function () {
       if (!d.open) return;
       faqItems.forEach(function (other) { if (other !== d) other.open = false; });
+    });
+  });
+
+  /* ---------------------------------------------------------
+     Viber: відкриття застосунку із запасним сценарієм
+
+     viber:// — це не веб-адреса, а команда «відкрий застосунок».
+     Якщо Viber не встановлений, браузер показує помилку «сторінка
+     не існує». Тому на Android використовуємо intent-посилання зі
+     вбудованим поверненням на сайт, а на решті платформ ловимо
+     невдачу за таймером і показуємо номер телефону.
+     --------------------------------------------------------- */
+  var toast = null;
+
+  var showToast = function (text) {
+    if (!toast) {
+      toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.setAttribute('role', 'status');
+      document.body.appendChild(toast);
+    }
+    toast.innerHTML = text;
+    toast.classList.add('is-shown');
+    clearTimeout(showToast.timer);
+    showToast.timer = setTimeout(function () {
+      toast.classList.remove('is-shown');
+    }, 7000);
+  };
+
+  var digits = CONFIG.phone.replace(/\D/g, '');
+
+  var MESSENGERS = {
+    viber: {
+      name: 'Viber',
+      scheme: 'viber://chat?number=%2B' + digits,
+      intent: 'intent://chat?number=%2B' + digits +
+              '#Intent;scheme=viber;package=com.viber.voip;S.browser_fallback_url=$BACK;end'
+    },
+    telegram: {
+      name: 'Telegram',
+      // t.me/+номер Telegram читає як запрошення до групи, а не як телефон,
+      // тому єдиний робочий шлях — схема tg://resolve?phone=
+      scheme: 'tg://resolve?phone=' + digits,
+      intent: 'intent://resolve?phone=' + digits +
+              '#Intent;scheme=tg;package=org.telegram.messenger;S.browser_fallback_url=$BACK;end'
+    }
+  };
+
+  var openMessenger = function (key) {
+    var app = MESSENGERS[key];
+    if (!app) return;
+
+    if (/Android/i.test(navigator.userAgent)) {
+      var back = encodeURIComponent(location.origin + location.pathname + '#contact');
+      window.location.href = app.intent.replace('$BACK', back);
+      return;
+    }
+
+    var left = false;
+    var mark = function () { left = true; };
+    document.addEventListener('visibilitychange', mark);
+    window.addEventListener('pagehide', mark);
+
+    setTimeout(function () {
+      document.removeEventListener('visibilitychange', mark);
+      window.removeEventListener('pagehide', mark);
+      if (!left && document.visibilityState === 'visible') {
+        showToast('Не вдалося відкрити ' + app.name + '. Телефонуйте: <a href="tel:' +
+          CONFIG.phone + '">' + CONFIG.phoneLabel + '</a>');
+      }
+    }, 1800);
+
+    window.location.href = app.scheme;
+  };
+
+  $$('[data-messenger]').forEach(function (link) {
+    link.addEventListener('click', function (e) {
+      e.preventDefault();
+      openMessenger(link.dataset.messenger);
     });
   });
 

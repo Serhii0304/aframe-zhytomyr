@@ -424,6 +424,20 @@ ul,ol,dl,dd{margin:0;padding:0;list-style:none}
 .mobile-bar__btn svg{width:17px;height:17px;fill:currentColor}
 .mobile-bar__btn--main{background:var(--accent)}
 
+/* ---------- сповіщення ---------- */
+.toast{
+  position:fixed;left:50%;bottom:24px;translate:-50% 20px;z-index:160;
+  max-width:min(420px,calc(100% - 32px));
+  padding:15px 22px;border-radius:var(--r-md);
+  background:rgba(25,28,32,.97);border:1px solid rgba(200,129,60,.5);
+  color:var(--on-dark);font-size:15px;text-align:center;line-height:1.5;
+  box-shadow:var(--shadow);
+  opacity:0;pointer-events:none;transition:opacity .3s ease,translate .3s ease;
+}
+.toast.is-shown{opacity:1;translate:-50% 0;pointer-events:auto}
+.toast a{color:var(--accent-hi);font-weight:800;white-space:nowrap}
+@media (max-width:760px){.toast{bottom:74px}}
+
 /* ---------- лайтбокс ---------- */
 .lightbox{
   position:fixed;inset:0;z-index:150;display:grid;place-items:center;
