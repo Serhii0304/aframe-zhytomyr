@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://serhii0304.github.io/aframe-zhytomyr/sitemap.xml
