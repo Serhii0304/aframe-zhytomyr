@@ -8,14 +8,18 @@
      НАЛАШТУВАННЯ — правити тут
      --------------------------------------------------------- */
   var CONFIG = {
-    phone: '+380996502298',
-    phoneLabel: '099 650 2298',
+    phone: '+380970864989',
+    phoneLabel: '097 086 4989',
 
-    // Куди надсилати заявки з форми.
-    // Порожньо -> форма працює через SMS-фолбек (працює завжди, без сервера).
-    // Щоб заявки падали на пошту: зареєструйтесь на https://web3forms.com (безкоштовно),
-    // отримайте Access Key і вставте його сюди.
-    web3formsKey: ''
+    // Пошта, на яку падають заявки. Працює через formsubmit.co —
+    // без реєстрації та без ключів.
+    //
+    // ВАЖЛИВО: першу заявку треба підтвердити. Після неї на цю адресу
+    // прийде лист від FormSubmit із кнопкою активації. Поки її не
+    // натиснути — наступні заявки не доставляються.
+    //
+    // Порожнє значення -> форма переходить на SMS-фолбек.
+    formEmail: 'Avessalom7@gmail.com'
   };
 
   var $ = function (s, c) { return (c || document).querySelector(s); };
@@ -360,40 +364,45 @@
     submitBtn.disabled = true;
     setStatus('Надсилаємо…');
 
-    if (CONFIG.web3formsKey) {
-      fetch('https://api.web3forms.com/submit', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify({
-          access_key: CONFIG.web3formsKey,
-          subject: 'Заявка з сайту A-Frame — ' + data.name,
-          from_name: 'Сайт A-Frame',
-          name: data.name,
-          phone: data.phone,
-          object: data.object,
-          area: data.area,
-          note: data.note
-        })
-      })
-        .then(function (r) { return r.json(); })
-        .then(function (res) {
-          if (!res.success) throw new Error('fail');
-          form.reset();
-          setStatus('Дякуємо! Заявку прийнято — передзвонимо найближчим часом.', 'ok');
-        })
-        .catch(function () {
-          setStatus('Не вдалося надіслати. Зателефонуйте, будь ласка: ' + CONFIG.phone, 'err');
-        })
-        .then(function () { submitBtn.disabled = false; });
+    // Запасний сценарій, якщо пошта недоступна: SMS із готовим текстом
+    var smsFallback = function () {
+      var isApple = /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent);
+      var body = encodeURIComponent(asText(data));
+      window.location.href = 'sms:' + CONFIG.phone + (isApple ? '&' : '?') + 'body=' + body;
+    };
+
+    if (!CONFIG.formEmail) {
+      smsFallback();
+      setStatus('Відкриваємо повідомлення. Якщо не спрацювало — телефонуйте: ' +
+        CONFIG.phoneLabel, 'ok');
+      submitBtn.disabled = false;
       return;
     }
 
-    // Фолбек без сервера: відкриваємо SMS із готовим текстом
-    var body = encodeURIComponent(asText(data));
-    var isApple = /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent);
-    window.location.href = 'sms:' + CONFIG.phone + (isApple ? '&' : '?') + 'body=' + body;
-
-    setStatus('Відкриваємо повідомлення. Якщо не спрацювало — телефонуйте: ' + CONFIG.phone, 'ok');
-    submitBtn.disabled = false;
+    fetch('https://formsubmit.co/ajax/' + encodeURIComponent(CONFIG.formEmail), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify({
+        _subject: 'Заявка з сайту A-Frame — ' + data.name,
+        _template: 'table',
+        _captcha: 'false',
+        'Імʼя': data.name,
+        'Телефон': data.phone,
+        'Обʼєкт': data.object,
+        'Площа, м²': data.area || '—',
+        'Коментар': data.note || '—'
+      })
+    })
+      .then(function (r) { return r.json(); })
+      .then(function (res) {
+        // FormSubmit повертає success рядком "true", а не булевим значенням
+        if (String(res.success) !== 'true') throw new Error(res.message || 'fail');
+        form.reset();
+        setStatus('Дякуємо! Заявку прийнято — передзвонимо найближчим часом.', 'ok');
+      })
+      .catch(function () {
+        setStatus('Не вдалося надіслати. Зателефонуйте, будь ласка: ' + CONFIG.phoneLabel, 'err');
+      })
+      .then(function () { submitBtn.disabled = false; });
   });
 })();
