@@ -96,6 +96,11 @@
       <li><b>Під&nbsp;ключ</b><span>від фундаменту до&nbsp;оздоблення</span></li>
       <li><b>Свій&nbsp;чи&nbsp;ваш</b><span>працюємо за&nbsp;будь-яким проєктом</span></li>
     </ul>
+
+    <p class="hero__note">
+      На головному фото — приклад архітектурного рішення.
+      <a href="#works">Наші власні об'єкти →</a>
+    </p>
   </div>
 
   <a class="hero__scroll" href="#services" aria-label="Донизу">
@@ -260,6 +265,7 @@
       <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v5h1"/></svg>
       Точна вартість залежить від площі, фундаменту, типу скління та рівня оздоблення.
       Прорахунок робимо безкоштовно — після короткої розмови телефоном.
+      На картках «Компакт» і «Максі» — приклади архітектурних рішень, на «Сімейному» — наш реалізований об'єкт.
     </p>
   </div>
 </section>
@@ -270,68 +276,83 @@
     <header class="section__head reveal">
       <p class="eyebrow eyebrow--light">Портфоліо</p>
       <h2 class="section__title">Наші роботи</h2>
-      <p class="section__lead">Показуємо не лише глянцеві кадри, а й процес — щоб ви бачили, з якого матеріалу і як саме збирається ваш будинок.</p>
+      <p class="section__lead">Тут і наші власні об'єкти, і приклади рішень, які ми виконуємо. Кожен знімок підписаний чесно — щоб ви точно знали, на що дивитесь.</p>
     </header>
 
     <div class="filters reveal" role="tablist" aria-label="Фільтр робіт">
       <button class="filter is-active" data-filter="all" role="tab" aria-selected="true">Усі</button>
-      <button class="filter" data-filter="ready" role="tab" aria-selected="false">Готові об'єкти</button>
-      <button class="filter" data-filter="build" role="tab" aria-selected="false">Каркас і монтаж</button>
-      <button class="filter" data-filter="project" role="tab" aria-selected="false">Проєкти</button>
+      <button class="filter" data-filter="own" role="tab" aria-selected="false">Наші об'єкти</button>
+      <button class="filter" data-filter="example" role="tab" aria-selected="false">Приклади й проєкти</button>
     </div>
 
+    <p class="gallery__legend reveal">
+      <span><i class="dot dot--own"></i>Наш об'єкт — знято на нашому будівництві</span>
+      <span><i class="dot dot--example"></i>Приклад — рішення й візуалізації, які ми виконуємо</span>
+    </p>
+
     <div class="gallery" id="gallery">
-      <button class="gallery__item reveal" data-cat="ready" data-full="./assets/img/hero.jpg" data-caption="Будинок А-фрейм із терасою та панорамним склінням">
+      <button class="gallery__item reveal" data-cat="example" data-full="./assets/img/hero.jpg" data-caption="Приклад архітектурного рішення: А-фрейм із терасою та панорамним склінням">
+        <span class="gallery__badge gallery__badge--example">Приклад</span>
         <img src="./assets/img/hero-600.jpg" width="600" height="400" loading="lazy" decoding="async" alt="Будинок А-фрейм із терасою у вечірньому освітленні">
         <span class="gallery__cap">А-фрейм із терасою</span>
       </button>
 
-      <button class="gallery__item reveal" data-cat="ready" data-full="./assets/img/exterior-1.jpg" data-caption="Реалізований об'єкт: А-фрейм з металевою покрівлею, терасою та зовнішніми сходами">
+      <button class="gallery__item reveal" data-cat="own" data-full="./assets/img/exterior-1.jpg" data-caption="Наш об'єкт: А-фрейм з металевою покрівлею, терасою та зовнішніми сходами">
+        <span class="gallery__badge gallery__badge--own">Наш об'єкт</span>
         <img src="./assets/img/exterior-1-600.jpg" width="600" height="797" loading="lazy" decoding="async" alt="Реалізований будинок А-фрейм з металевою покрівлею">
         <span class="gallery__cap">Реалізований об'єкт</span>
       </button>
 
-      <button class="gallery__item reveal" data-cat="ready" data-full="./assets/img/interior-1.jpg" data-caption="Мансарда зсередини: обшивка вагонкою і трикутне вікно у вершині фронтону">
+      <button class="gallery__item reveal" data-cat="own" data-full="./assets/img/interior-1.jpg" data-caption="Наш об'єкт: мансарда зсередини, обшивка вагонкою і трикутне вікно у вершині фронтону">
+        <span class="gallery__badge gallery__badge--own">Наш об'єкт</span>
         <img src="./assets/img/interior-1-600.jpg" width="600" height="800" loading="lazy" decoding="async" alt="Мансарда, обшита вагонкою, з трикутним вікном">
         <span class="gallery__cap">Мансарда, вагонка</span>
       </button>
 
-      <button class="gallery__item reveal" data-cat="ready" data-full="./assets/img/interior-3.jpg" data-caption="Трикутне панорамне вікно у скосі даху">
-        <img src="./assets/img/interior-3-600.jpg" width="600" height="800" loading="lazy" decoding="async" alt="Трикутне панорамне вікно у скосі даху зсередини">
+      <button class="gallery__item reveal" data-cat="own" data-full="./assets/img/interior-3.jpg" data-caption="Наш об'єкт: трикутне панорамне вікно у скосі даху">
+        <span class="gallery__badge gallery__badge--own">Наш об'єкт</span>
+        <img src="./assets/img/interior-3-600.jpg" width="600" height="800" loading="lazy" decoding="async" alt="Наш об'єкт: трикутне панорамне вікно у скосі даху зсередини">
         <span class="gallery__cap">Панорамне скління</span>
       </button>
 
-      <button class="gallery__item reveal" data-cat="ready" data-full="./assets/img/interior-2.jpg" data-caption="Стеля мансарди з дерев'яними балками та дахове вікно">
+      <button class="gallery__item reveal" data-cat="own" data-full="./assets/img/interior-2.jpg" data-caption="Наш об'єкт: стеля мансарди з дерев'яними балками та дахове вікно">
+        <span class="gallery__badge gallery__badge--own">Наш об'єкт</span>
         <img src="./assets/img/interior-2-600.jpg" width="600" height="800" loading="lazy" decoding="async" alt="Стеля мансарди з балками та дахове вікно">
         <span class="gallery__cap">Стеля й дахове вікно</span>
       </button>
 
-      <button class="gallery__item reveal" data-cat="build" data-full="./assets/img/frame-1.jpg" data-caption="Несуча А-подібна рама з бічним навісом на палях">
+      <button class="gallery__item reveal" data-cat="example" data-full="./assets/img/frame-1.jpg" data-caption="Приклад конструкції: несуча А-подібна рама з бічним навісом на палях">
+        <span class="gallery__badge gallery__badge--example">Приклад</span>
         <img src="./assets/img/frame-1-600.jpg" width="600" height="400" loading="lazy" decoding="async" alt="Дерев'яний каркас А-фрейм з бічним навісом">
         <span class="gallery__cap">Каркас з навісом</span>
       </button>
 
-      <button class="gallery__item reveal" data-cat="build" data-full="./assets/img/frame-2.jpg" data-caption="Монтаж покрівлі та обрешітки на каркасі А-фрейм">
+      <button class="gallery__item reveal" data-cat="example" data-full="./assets/img/frame-2.jpg" data-caption="Приклад: монтаж покрівлі та обрешітки на каркасі А-фрейм">
+        <span class="gallery__badge gallery__badge--example">Приклад</span>
         <img src="./assets/img/frame-2.jpg" width="698" height="689" loading="lazy" decoding="async" alt="Монтаж покрівлі на каркасі А-фрейм">
         <span class="gallery__cap">Монтаж покрівлі</span>
       </button>
 
-      <button class="gallery__item reveal" data-cat="build" data-full="./assets/img/frame-3.jpg" data-caption="Збірка стінового каркаса каркасного будинку на стрічковому фундаменті">
+      <button class="gallery__item reveal" data-cat="example" data-full="./assets/img/frame-3.jpg" data-caption="Приклад: збірка стінового каркаса на стрічковому фундаменті">
+        <span class="gallery__badge gallery__badge--example">Приклад</span>
         <img src="./assets/img/frame-3-600.jpg" width="600" height="420" loading="lazy" decoding="async" alt="Стіновий каркас каркасного будинку">
         <span class="gallery__cap">Каркас будинку</span>
       </button>
 
-      <button class="gallery__item reveal" data-cat="project" data-full="./assets/img/model-3d.jpg" data-caption="3D-модель несучого каркаса — узгоджуємо конструкцію до початку робіт">
+      <button class="gallery__item reveal" data-cat="example" data-full="./assets/img/model-3d.jpg" data-caption="3D-модель несучого каркаса: так виглядає конструкція, яку узгоджуємо до робіт">
+        <span class="gallery__badge gallery__badge--example">Приклад</span>
         <img src="./assets/img/model-3d.jpg" width="698" height="689" loading="lazy" decoding="async" alt="Тривимірна модель каркаса будинку А-фрейм">
         <span class="gallery__cap">3D-модель каркаса</span>
       </button>
 
-      <button class="gallery__item reveal" data-cat="project" data-full="./assets/img/model-red.jpg" data-caption="Візуалізація компактного А-фрейму з навісом і терасою">
+      <button class="gallery__item reveal" data-cat="example" data-full="./assets/img/model-red.jpg" data-caption="Візуалізація компактного А-фрейму з навісом і терасою">
+        <span class="gallery__badge gallery__badge--example">Приклад</span>
         <img src="./assets/img/model-red.jpg" width="704" height="689" loading="lazy" decoding="async" alt="Візуалізація компактного будинку А-фрейм">
         <span class="gallery__cap">Візуалізація</span>
       </button>
 
-      <button class="gallery__item reveal" data-cat="project" data-full="./assets/img/dusk-vertical.jpg" data-caption="Приклад архітектурного рішення: суцільне скління фронтону">
+      <button class="gallery__item reveal" data-cat="example" data-full="./assets/img/dusk-vertical.jpg" data-caption="Приклад архітектурного рішення: суцільне скління фронтону">
+        <span class="gallery__badge gallery__badge--example">Приклад</span>
         <img src="./assets/img/dusk-vertical.jpg" width="664" height="996" loading="lazy" decoding="async" alt="Будинок А-фрейм із суцільним склінням фронтону">
         <span class="gallery__cap">Скління фронтону</span>
       </button>
@@ -494,7 +515,6 @@
 
       <dl class="contact__meta">
         <div><dt>Регіон робіт</dt><dd>Житомирська та Київська області</dd></div>
-        <div><dt>База</dt><dd>м. Житомир, с. Путятинка</dd></div>
         <div><dt>Пошта</dt><dd><a href="mailto:Avessalom7@gmail.com">Avessalom7@gmail.com</a></dd></div>
         <div><dt>Графік</dt><dd>Пн–Нд, 8:00–20:00</dd></div>
         <div><dt>Оголошення</dt><dd><a href="https://www.olx.ua/d/uk/obyavlenie/budvnitstvo-a-freym-karkasnih-modulnih-budinkv-IDZEhWb.html" target="_blank" rel="noopener">Профіль на OLX</a></dd></div>
