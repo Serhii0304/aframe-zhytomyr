@@ -335,8 +335,9 @@
   var statusEl = $('#formStatus');
   var submitBtn = $('#submitBtn');
 
-  var setStatus = function (text, kind) {
-    statusEl.textContent = text;
+  var setStatus = function (text, kind, asHtml) {
+    if (asHtml) statusEl.innerHTML = text;
+    else statusEl.textContent = text;
     statusEl.className = 'form__status' + (kind ? ' is-' + kind : '');
   };
 
@@ -440,8 +441,14 @@
         clearErrors();
         setStatus('Дякуємо! Заявку прийнято — передзвонимо найближчим часом.', 'ok');
       })
-      .catch(function () {
-        setStatus('Не вдалося надіслати. Зателефонуйте, будь ласка: ' + CONFIG.phoneLabel, 'err');
+      .catch(function (err) {
+        // Причину пишемо в консоль — щоб не гадати, чому не доходять заявки.
+        // Найчастіша: адресу пошти ще не підтверджено листом активації.
+        if (window.console) console.warn('[форма] не надіслано:', err && err.message);
+
+        // Телефон робимо клікабельним, щоб заявка не загубилась
+        setStatus('Не вдалося надіслати. Зателефонуйте, будь ласка: ' +
+          '<a href="tel:' + CONFIG.phone + '">' + CONFIG.phoneLabel + '</a>', 'err', true);
       })
       .then(function () { submitBtn.disabled = false; });
   });
