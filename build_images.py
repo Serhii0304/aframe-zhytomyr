@@ -25,7 +25,10 @@ MAP = {
 UPSCALE = {"hero": 2.0, "frame-2": 1.8, "frame-3": 2.0, "model-3d": 1.8,
            "model-red": 1.8, "dusk-vertical": 2.0}
 
-FULL, SMALL = 1600, 600
+# 360 — плитка галереї на смартфоні у дві колонки
+# 600 — та сама плитка на планшеті й десктопі, а також картки формату
+# 1600 — повний розмір для лайтбокса й великих блоків
+FULL, SMALL, TINY = 1600, 600, 360
 
 
 def save(im, stem, width):
@@ -44,4 +47,5 @@ for src, name in MAP.items():
         im = im.filter(ImageFilter.UnsharpMask(radius=1.6, percent=105, threshold=3))
     full = save(im, name, FULL)
     small = save(im, f"{name}-600", SMALL) if im.width > 700 else None
-    print(f"{name:14s} full={full} small={small}")
+    tiny = save(im, f"{name}-360", TINY) if im.width > 420 else None
+    print(f"{name:14s} full={full} small={small} tiny={tiny}")
