@@ -517,6 +517,24 @@ ul,ol,dl,dd{margin:0;padding:0;list-style:none}
   .gallery{columns:3}
 }
 
+/* ---------- планшет: прибираємо «осиротілі» картки ----------
+   У цьому діапазоні три формати лягали як 2+1, а чотири блоки
+   довіри як 3+1 — останній залишався сам у ряду. Формати стають
+   горизонтальними на всю ширину, довіра — у два рівні стовпці. */
+@media (min-width:701px) and (max-width:1080px){
+  .trust__grid{grid-template-columns:repeat(2,1fr)}
+}
+
+@media (min-width:701px) and (max-width:990px){
+  .formats{grid-template-columns:1fr;gap:18px}
+  .format{flex-direction:row}
+  .format__media{flex:0 0 40%;aspect-ratio:auto;min-height:240px}
+  .format__media img{position:absolute;inset:0;height:100%}
+  .format__body{flex:1;padding:28px 30px}
+  .format__body h3{font-size:26px}
+  .format--featured{box-shadow:0 14px 36px -26px rgba(200,129,60,.7)}
+}
+
 @media (max-width:900px){
   .why__grid,.included__grid,.contact__grid{grid-template-columns:1fr}
   .why__media,.included__media{order:-1}
