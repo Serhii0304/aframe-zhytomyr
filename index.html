@@ -17,7 +17,7 @@
 <meta name="twitter:card" content="summary_large_image">
 
 <link rel="icon" href="./favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="./favicon.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -279,10 +279,10 @@
       <p class="section__lead">Тут і наші власні об'єкти, і приклади рішень, які ми виконуємо. Кожен знімок підписаний чесно — щоб ви точно знали, на що дивитесь.</p>
     </header>
 
-    <div class="filters reveal" role="tablist" aria-label="Фільтр робіт">
-      <button class="filter is-active" data-filter="all" role="tab" aria-selected="true">Усі</button>
-      <button class="filter" data-filter="own" role="tab" aria-selected="false">Наші об'єкти</button>
-      <button class="filter" data-filter="example" role="tab" aria-selected="false">Приклади й проєкти</button>
+    <div class="filters reveal" role="group" aria-label="Фільтр робіт">
+      <button class="filter is-active" data-filter="all" aria-pressed="true">Усі</button>
+      <button class="filter" data-filter="own" aria-pressed="false">Наші об'єкти</button>
+      <button class="filter" data-filter="example" aria-pressed="false">Приклади й проєкти</button>
     </div>
 
     <p class="gallery__legend reveal">
@@ -522,7 +522,16 @@
     </div>
 
     <div class="contact__form-wrap reveal">
-      <form class="form" id="leadForm" novalidate>
+      <!-- action і method — запасний шлях: якщо JavaScript не спрацює,
+           браузер надішле форму напряму на FormSubmit, а не в адресний рядок.
+           Замінюючи пошту, поміняйте її і тут, і в assets/js/main.js -->
+      <form class="form" id="leadForm" novalidate
+            action="https://formsubmit.co/Avessalom7@gmail.com" method="POST">
+        <!-- пастка для ботів: люди це поле не бачать, боти заповнюють -->
+        <input type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true" class="honey">
+        <input type="hidden" name="_subject" value="Заявка з сайту A-Frame">
+        <input type="hidden" name="_template" value="table">
+        <input type="hidden" name="_captcha" value="false">
         <h3 class="form__title">Заявка на безкоштовний прорахунок</h3>
 
         <div class="field">
@@ -549,7 +558,7 @@
             </select>
           </div>
           <div class="field">
-            <label for="f-area">Площа, м²</label>
+            <label for="f-area">Площа, м² <span class="field__opt">— від 6 до 500</span></label>
             <input id="f-area" name="area" type="number" min="6" max="500" step="1" inputmode="numeric" placeholder="45">
           </div>
         </div>
@@ -624,7 +633,7 @@
   <button class="lightbox__nav lightbox__nav--prev" id="lbPrev" aria-label="Попереднє фото">&#8249;</button>
   <button class="lightbox__nav lightbox__nav--next" id="lbNext" aria-label="Наступне фото">&#8250;</button>
   <figure class="lightbox__figure">
-    <img id="lbImg" src="" alt="">
+    <img id="lbImg" alt="" decoding="async">
     <figcaption id="lbCap"></figcaption>
   </figure>
 </div>

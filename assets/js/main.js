@@ -119,7 +119,7 @@
       filters.forEach(function (b) {
         var active = b === btn;
         b.classList.toggle('is-active', active);
-        b.setAttribute('aria-selected', String(active));
+        b.setAttribute('aria-pressed', String(active));
       });
 
       applyGallery();
@@ -131,7 +131,15 @@
     applyGallery();
   });
 
-  window.matchMedia('(max-width: 760px)').addEventListener('change', applyGallery);
+  // Safari до 14 версії не має addEventListener у медіазапитів, лише застарілий
+  // addListener. Без цієї страховки помилка тут зупиняла б увесь скрипт нижче —
+  // разом із формою заявки.
+  (function () {
+    var mq = window.matchMedia('(max-width: 760px)');
+    if (typeof mq.addEventListener === 'function') mq.addEventListener('change', applyGallery);
+    else if (typeof mq.addListener === 'function') mq.addListener(applyGallery);
+  })();
+
   applyGallery();
 
   /* ---------------------------------------------------------
@@ -143,10 +151,10 @@
   var lastFocused = null;
   var current = 0;
 
+  // Гортаємо всі фото поточного фільтра, зокрема ті, що на смартфоні ще
+  // приховані кнопкою «показати ще» — інакше три останні недосяжні.
   var visibleItems = function () {
-    return items.filter(function (i) {
-      return !i.classList.contains('is-hidden') && !i.classList.contains('is-clipped');
-    });
+    return items.filter(function (i) { return !i.classList.contains('is-hidden'); });
   };
 
   var show = function (index) {
@@ -159,18 +167,36 @@
     lbCap.textContent = item.dataset.caption || '';
   };
 
+  // Утримуємо фокус усередині модалки, поки вона відкрита
+  var trapFocus = function (e) {
+    if (e.key !== 'Tab' || lb.hidden) return;
+    var focusable = $$('button, [href]', lb).filter(function (el) { return !el.disabled; });
+    if (!focusable.length) return;
+
+    var first = focusable[0];
+    var last = focusable[focusable.length - 1];
+
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    else if (!lb.contains(document.activeElement)) { e.preventDefault(); first.focus(); }
+  };
+
   var openLb = function (item) {
     lastFocused = document.activeElement;
     show(visibleItems().indexOf(item));
     lb.hidden = false;
     document.body.style.overflow = 'hidden';
+    document.addEventListener('keydown', trapFocus, true);
     $('#lbClose').focus();
   };
 
   var closeLb = function () {
     lb.hidden = true;
-    lbImg.src = '';
+    // removeAttribute, а не src='': порожній src змушує браузер
+    // завантажувати саму сторінку як зображення
+    lbImg.removeAttribute('src');
     document.body.style.overflow = '';
+    document.removeEventListener('keydown', trapFocus, true);
     if (lastFocused) lastFocused.focus();
   };
 
@@ -314,23 +340,32 @@
     statusEl.className = 'form__status' + (kind ? ' is-' + kind : '');
   };
 
+  var clearErrors = function () {
+    $$('[aria-invalid]', form).forEach(function (f) { f.removeAttribute('aria-invalid'); });
+  };
+
   var validate = function () {
     var ok = true;
     var name = $('#f-name');
     var phone = $('#f-phone');
+    var area = $('#f-area');
     var agree = $('#f-agree');
 
-    var digits = phone.value.replace(/\D/g, '');
+    var phoneDigits = phone.value.replace(/\D/g, '');
+    var areaNum = parseInt(area.value, 10);
+    var areaOk = area.value === '' || (areaNum >= 6 && areaNum <= 500);
 
-    [[name, name.value.trim().length >= 2], [phone, digits.length >= 9]].forEach(function (pair) {
+    [[name, name.value.trim().length >= 2],
+     [phone, phoneDigits.length >= 9],
+     [area, areaOk]].forEach(function (pair) {
       var field = pair[0];
       var valid = pair[1];
-      field.setAttribute('aria-invalid', String(!valid));
-      if (!valid) ok = false;
+      if (valid) field.removeAttribute('aria-invalid');
+      else { field.setAttribute('aria-invalid', 'true'); ok = false; }
     });
 
     if (!agree.checked) ok = false;
-    return ok;
+    return { ok: ok, areaOk: areaOk };
   };
 
   var collect = function () {
@@ -355,8 +390,11 @@
   form.addEventListener('submit', function (e) {
     e.preventDefault();
 
-    if (!validate()) {
-      setStatus('Заповніть імʼя, телефон і позначте згоду.', 'err');
+    var check = validate();
+    if (!check.ok) {
+      setStatus(check.areaOk
+        ? 'Заповніть імʼя, телефон і позначте згоду.'
+        : 'Площа має бути від 6 до 500 м².', 'err');
       return;
     }
 
@@ -386,6 +424,7 @@
         _subject: 'Заявка з сайту A-Frame — ' + data.name,
         _template: 'table',
         _captcha: 'false',
+        _honey: ($('input[name="_honey"]', form) || {}).value || '',
         'Імʼя': data.name,
         'Телефон': data.phone,
         'Обʼєкт': data.object,
@@ -398,6 +437,7 @@
         // FormSubmit повертає success рядком "true", а не булевим значенням
         if (String(res.success) !== 'true') throw new Error(res.message || 'fail');
         form.reset();
+        clearErrors();
         setStatus('Дякуємо! Заявку прийнято — передзвонимо найближчим часом.', 'ok');
       })
       .catch(function () {

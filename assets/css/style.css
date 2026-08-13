@@ -405,6 +405,9 @@ ul,ol,dl,dd{margin:0;padding:0;list-style:none}
 .field input::placeholder,.field textarea::placeholder{color:#a8a29a}
 .field input[aria-invalid="true"]{border-color:#c0392b;background:#fdf1ef}
 
+/* пастка для ботів — прибрана з потоку, з фокуса і з озвучування */
+.honey{position:absolute;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none}
+
 .check{display:flex;gap:11px;align-items:flex-start;margin:6px 0 22px;font-size:13.5px;color:var(--on-light-mut);cursor:pointer}
 .check input{width:19px;height:19px;flex:none;margin-top:1px;accent-color:var(--accent)}
 
