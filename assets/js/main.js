@@ -26,6 +26,17 @@
   var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
 
   /* ---------------------------------------------------------
+     Завжди починаємо з шапки
+
+     Браузер за замовчуванням відновлює попередню позицію прокрутки —
+     через це лендінг міг відкриватись із середини сторінки. Для
+     односторінкового сайту це виглядає як поламана верстка.
+     Перехід за якорем (#works тощо) працює як і раніше.
+     --------------------------------------------------------- */
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  if (!location.hash) window.scrollTo(0, 0);
+
+  /* ---------------------------------------------------------
      Рік у підвалі
      --------------------------------------------------------- */
   var yearEl = $('#year');
@@ -422,7 +433,7 @@
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
       body: JSON.stringify({
-        _subject: 'Заявка з сайту A-Frame — ' + data.name,
+        _subject: 'Заявка з сайту А-Фрейм — ' + data.name,
         _template: 'table',
         _captcha: 'false',
         _honey: ($('input[name="_honey"]', form) || {}).value || '',
